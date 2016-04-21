@@ -1,0 +1,13 @@
+default:
+    suites:
+        default:
+            paths: [ %paths.base%/tests/features ]
+            contexts:
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:json
+                - behatch:rest
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            base_url: 'https://gitlab.com'
+            goutte: ~
+        Sanpi\Behatch\Extension: ~

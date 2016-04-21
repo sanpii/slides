@@ -1,0 +1,15 @@
+{
+    "require": {
+        "silex/silex": "~1.2"
+    },
+    "require-dev": {
+        "silex/web-profiler": "~1.0",
+        "guzzlehttp/guzzle": "~6.1",
+        "phpunit/phpunit": "~5.2",
+        "behatch/contexts": "*",
+        "behat/mink-goutte-driver": "*"
+    },
+    "autoload-dev": {
+        "files": ["tests/features/bootstrap/FeatureContext.php"]
+    }
+}
