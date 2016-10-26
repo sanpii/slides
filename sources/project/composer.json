@@ -1,0 +1,11 @@
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../test"
+        }
+    ],
+    "require": {
+        "my/plugin": "*@dev"
+    }
+}

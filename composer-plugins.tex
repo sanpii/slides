@@ -48,10 +48,16 @@
     }
     \pause
 }
+
+\newcommand<>{\imgoverlay}[1]{
+    \addtooverlay<.(1)>{
+        \includegraphics[width=0.9\textwidth,height=0.9\textheight,keepaspectratio]{#1}
+    }
+}
 % }}}
 
 \title{Étendre composer}
-\author{Nicolas \textsc{Joseph}}
+\author{Sanpi}
 \date{28 octobre 2016}
 \institute{Forum PHP}
 
@@ -60,20 +66,13 @@
 \begin{frame}
     \titlepage
 \end{frame}
-\note {
-    Bonjour à tous,
-
-    J’imagine que vous commencez à voir faim, je vais donc faire vite.
-}
 % }}}
 % {{{ Les nouvelles commandes
 \section{Les nouvelles commandes}
 \begin{frame}
     \frametitle{Les nouvelles commandes}
 
-    \addtooverlay<.(1)>{
-        \includegraphics[scale=0.28]{images/update}
-    }
+    \imgoverlay{images/update}
 \end{frame}
 
 \note {
@@ -90,32 +89,18 @@
 
     \begin{itemize}[<+->]
         \item license
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/licenses}
-        }
+        \imgoverlay{images/licenses}
 
         \item suggests
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.21]{images/suggests-install}
-        }
-
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/suggests}
-        }
+        \imgoverlay{images/suggests-install}
+        \imgoverlay{images/suggests}
 
         \item outdated
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/outdated}
-        }
+        \imgoverlay{images/outdated}
 
         \item why
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.21]{images/conflict}
-        }
-
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/why}
-        }
+        \imgoverlay{images/conflict}
+        \imgoverlay{images/why}
     \end{itemize}
 \end{frame}
 
@@ -157,13 +142,9 @@
 \begin{frame}
     \frametitle{Les scripts}
 
-    \addtooverlay<.(1)>{
-        \includegraphics[scale=0.28]{images/composer/zf}
-    }
+    \imgoverlay{images/composer/zf}
 
-    \addtooverlay<.(1)>{
-        \includegraphics[scale=0.28]{images/composer/sf}
-    }
+    \imgoverlay{images/composer/sf}
 \end{frame}
 
 \note {
@@ -262,21 +243,16 @@
 
     \begin{itemize}[<+->]
         \item Composer$\backslash$Plugin$\backslash$PluginInterface
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/activate}
-        }
+        \imgoverlay{images/activate}
 
         \item Composer$\backslash$EventDispatcher$\backslash$EventSubscriberInterface
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/event-subscriber}
-        }
+        \imgoverlay{images/event-subscriber}
 
         \item Composer$\backslash$Plugin$\backslash$Capable
 
         \item Composer$\backslash$Plugin$\backslash$Capability$\backslash$CommandProvider
-        \addtooverlay<.(1)>{
-            \includegraphics[scale=0.28]{images/command}
-        }
+        \imgoverlay{images/command-provider}
+        \imgoverlay{images/command}
     \end{itemize}
 \end{frame}
 
@@ -325,6 +301,7 @@
         \item hirak/prestissimo
         \item fxp/composer-asset-plugin
         \item stecman/composer-bash-completion-plugin
+        \item kewlar/composer-changelogs-plugin
         \item netresearch/composer-patches-plugin
     \end{itemize}
 \end{frame}
@@ -340,6 +317,9 @@
         via composer.
     \item composer-bash-completion-plugin, indispensable pour obtenir
         l’autocompletion sous bash
+    \item composer-changelogs-plugin, va générer un changelog avec un lien vers
+        les modifications des dépendances mise à jour. Plus pratique à lire
+        qu’un diff de composer.lock
     \item composer-patches-plugin, celui-là je ne sais pas si c’est une bonne
         idée. Il permet d’appliquer un patch aux dépendances, plutôt que de
         maintenir un fork. Si le plugin n’est pas installé sur la machine de
