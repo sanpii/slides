@@ -1,0 +1,320 @@
+% {{{ Packages
+
+% {{{ Versions
+% version écran
+\documentclass{beamer}
+
+% version orateur
+%\setbeameroption{show only notes}
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+% version spectateur
+%\documentclass[handout]{beamer}
+%\usepackage{handoutWithNotes}
+%\pgfpagesuselayout{1 on 1 with notes}[a4paper,border shrink=5mm]
+% }}}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{minted}
+\usetheme[numbering=none]{metropolis}
+
+% }}}
+% {{{ Commands
+\makeatletter
+\def\ft@overlay{}
+
+\addtobeamertemplate{footline}{}
+{
+    \lineskiplimit0pt
+    \begin{tikzpicture}[remember picture,overlay]
+        \ft@overlay
+    \end{tikzpicture}
+    \gdef\ft@overlay{}
+}
+
+\newcommand<>{\addtooverlay}[1]{
+    \only#2{
+      \expandafter\gdef\expandafter\ft@overlay\expandafter{\ft@overlay
+          \draw[fill=black,opacity=0.70]
+              (current page.north east) rectangle (current page.south west);
+          \node[text=white] at (current page.center) {
+              #1
+          };
+      }
+    }
+    \pause{}
+}
+
+\newcommand<>{\imgoverlay}[1]{
+    \addtooverlay<. (1)>{
+        \includegraphics[width=0.9\textwidth,height=0.9\textheight,keepaspectratio]{#1}
+    }
+}
+% }}}
+
+\title{Comment contribuer à Symfony ?}
+\author{Nicolas Joseph}
+\date{27 avril 2017}
+
+\begin{document}
+% {{{ Titre
+\begin{frame}
+    \titlepage{}
+\end{frame}
+\note {
+    Alors je vais vous parler de comment contribuer à Symfony.
+}
+% }}}
+
+% {{{ Comment j’ai contribuer à Symfony
+\begin{frame}
+    \title{Comment \alert{j’ai} contribué à Symfony ?}
+
+    \titlepage{}
+\end{frame}
+
+\note {
+    Enfin, je vais vous raconter comment j’ai contribué à Symfony en espérant
+    vous donner l’envie de faire de même car je suis convaincu que vous avez de
+    bonnes idées pour améliorer ce framework.
+}
+
+\begin{frame}
+    \frametitle{Comment j’ai contribué à Symfony ?}
+
+    \imgoverlay{images/pr}
+\end{frame}
+
+\note {
+    Je vais donc revenir sur les quatres contributions que j’ai faites il y a
+    deux semaines.
+}
+% }}}
+
+% {{{ Par où commencer
+\section{Par où commencer ?}
+
+\begin{frame}
+    \frametitle{Par où commencer ?}
+\end{frame}
+
+\note {
+    Le plus compliqué dans l’histoire est probablement de trouver quelque chose
+    à faire. Il existe plein de manière de contribuer à Symfony.
+    Étant développeur, je vais me concentrer sur le code.
+
+    Le code de symfony est de très bonne qualité donc il est peux
+    probable de tomber sur un bug ou une nouvelle fonctionnalité qui soit
+    suffisament simple à implémenter, pour commencer.
+}
+
+\begin{frame}[fragile]
+    \frametitle{Par où commencer ?}
+
+    \imgoverlay{images/pomm-bundle-pr}
+    \imgoverlay{images/symfony4-best-practices}
+    \imgoverlay{images/symbiose}
+    \imgoverlay{images/knp-dotenv}
+
+    \begin{minted}{php}
+<?php
+# vlucas/phpdotenv
+$dotenv = new Dotenv\Dotenv(__DIR__.'/../');
+$dotenv->load();
+    \end{minted}
+
+    \begin{onlyenv}<6>
+        \begin{minted}{php}
+<?php
+# symfony/dotenv
+$dotenv = new Dotenv\Dotenv();
+$dotenv->load(__DIR_ . '/../.env'/*, ... */);
+        \end{minted}
+    \end{onlyenv}
+
+\end{frame}
+
+\note {
+    Ma première idée a été de proposer un moyen de noter un nœud de
+    configuration comme obsolète, tout simplement car je besoin c’est imposé au
+    détour d’une PR sur le bundle symfony pour pomm.
+
+    J’ai commencé a codé sans réussir à faire quelque chose qui fonctionne. J’ai
+    donc abandonné l’idée. Voici pour ma première contribution ratée à symfony.
+
+    Ensuite, au détour des premiers articles de Fabien Potencier sur ce que sera
+    symfony 4 et les bonnes pratiques qui vont avec, j’ai voulu mettre à jour
+    mon squelette de projet symfony.
+
+    C’est un projet que j’ai commencé afin de rapidement démarré un projet
+    incluant symfony, pomm, atoum et behat. Puis continué à l’enrichir au
+    fil de des articles et autres conférence sur les bonnes pratiques comme par
+    exemple remplacer `app.php` et `app\_dev.php` par un unique `index.php` ou
+    encore ajouté un Makefile. Et donc dernière idée en date, était utiliser le
+    composant Dotenv de symfony pour charger la configuration depuis des
+    variables d’environement plutôt que depuis le fichier parameters.yml. Ce
+    sera le cas dans symfony4.
+
+    Je recherche donc à quel endroit il faut faire cela, et je tombe sur un
+    article de knp qui propose d’ajouter deux lignes dans le fichier index.php.
+    Lignes que je copie/colle et là rien ne se passe…
+
+    J’avais simplement oublié de lire le début de l’article qui précise qu’il
+    s’agit du composant dotenv de vlucas, pas celui de symfony qui s’utilise
+    comme ceci.
+
+    Donc plutôt que de passer un dossier au constructeur, on passe un fichier à
+    la méthode load.
+}
+% }}}
+
+% {{{ Coder
+\section{Coder}
+
+\begin{frame}
+    \frametitle{Coder}
+
+    \imgoverlay{images/dotenv-pr}
+\end{frame}
+
+\note {
+    Donc une fois que vous avez votre sujet de contribution, il reste à la
+    codée.
+
+    J’ai donc proposé deux PR, une première qui vérifie que l’on charge bien un
+    fichier et une seconde pour vérifier qu’il y a au moins un argument à la
+    méthode load.
+
+    J’ai fait deux PR car je n’étais pas sûr que la seconde soit acceptée.
+
+    Donc voici ma première PR, neuf lignes de test et une demie-ligne de code.
+}
+% }}}
+
+% {{{ Créer la PR
+\section{Créer la PR}
+
+\begin{frame}
+    \frametitle{Créer la PR}
+
+    \imgoverlay{images/create-pr}
+    \imgoverlay{images/contributing}
+    \imgoverlay{images/checklist}
+\end{frame}
+
+\note {
+    Bon, nous avons notre PR, c’est maintenant que les choses sérieuses vont
+    commencer.
+
+    En créant votre PR sur github, vous serez invité à un peu de lecture que je
+    vous conseille de lire avant de commencer à coder.
+
+    Ensuite, vous devez remplir une check list.
+
+    Une fois fait, on valide la création de la PR et c’est là que les robots va
+    entrée en jeux.
+}
+% }}}
+
+% {{{ Les robots
+\section{Les robots}
+
+\begin{frame}
+    \frametitle{Les robots}
+
+    \imgoverlay{images/carsonbot}
+    \imgoverlay{images/fabbot}
+    \imgoverlay{images/checks}
+\end{frame}
+
+\note {
+    Le premier robot qui va intervenir, c’est carsonbot, dont le code est libre,
+    et va s’occuper de mettre les labels adécouate en fonction du titre de votre
+    PR. Manque de bol ici, dotenv n’est pas encore pris en compte. Ainsi que le
+    label « Needs Review ». Je reviendrais dessus par la suite.
+
+    Le second robot, fabbot, va faire quelques vérifications rapides.
+
+    Ensuite, on trouve des boots plus classique, comme travis qui va lancer les
+    tests unitaire et AppVeyor qui fait la même chose mais sous Windows.
+
+    Donc si tout cela est ok, vous avez fini la première partie de votre
+    travail.
+}
+% }}}
+
+% {{{ Les humains
+\section{Les humains}
+
+\begin{frame}
+    \frametitle{Les humains}
+
+    \imgoverlay{images/reviewed}
+    \imgoverlay{images/memory}
+    \imgoverlay{images/fabpot}
+\end{frame}
+
+\note {
+    C’est à ce moment qu’intervient les humains. C’est un peu plus chaotique,
+    mais globalement on peux les classer dans 3 catégories.
+
+    La première catégorie, ce sont les personnes qui vont
+    relire votre contribution. Chacun peut le faire et laisser un commentaire
+    pour mettre à jour le status de la PR.
+
+    Ensuite, des gens qui on un peu suivi les choses vont vous indiquer que ce
+    que vous proposé à déjà été refusé.
+
+    Bon et bien sûr des gens qui vont être d’accord ou pas d’accord avec votre
+    idée. Bref, du classique si vous avez déjà participé à un projet.
+
+    Peut être une chose intéressante à noter c’est que Fabien Potencier semble
+    avec le dernier mot, en mergeant votre PR ou en la fermant.
+}
+% }}}
+
+% {{{ Conclusion
+\section{Conclusion}
+
+\begin{frame}
+    \frametitle{Conclusion}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+
+    \imgoverlay{images/pr}
+\end{frame}
+
+\note {
+    Voilà, mon code est disponible pour tout les utilisateurs de symfony et j’ai
+    à mon niveau amélioré cet exellent outils.
+
+    En guise de conclusion, je vous conseilleai de commencer avec une petite
+    contribution, de préférence un bug qui aura le plus de change d’être
+    intégré.
+}
+% }}}
+
+% {{{ Références
+\section{Références}
+\begin{frame}
+    \frametitle{Références}
+
+    \begin{itemize}
+        \item \tiny \href{https://github.com/sanpii/slides/releases/download/sfpot-2017-04/symfony-contrib.pdf}
+            {github.com/\textbf{\alert{sanpii/slides}}/releases/download/sfpot-2017-04/symfony-contrib.pdf}
+
+        \item \tiny \url{https://github.com/symfony/symfony/blob/master/CONTRIBUTING.md}
+        \item \tiny \url{http://fabien.potencier.org/symfony4-best-practices.html}
+        \item \tiny \url{https://knpuniversity.com/screencast/micro-symfony/dotenv}
+        \item \tiny \url{https://github.com/carsonbot/carsonbot}
+        \item \tiny \url{http://fabbot.io}
+    \end{itemize}
+\end{frame}
+% }}}
+\end{document}
