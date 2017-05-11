@@ -1,0 +1,235 @@
+% {{{ Packages
+
+% {{{ Versions
+% version écran
+\documentclass{beamer}
+
+% version orateur
+%\setbeameroption{show only notes}
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+% version spectateur
+%\documentclass[handout]{beamer}
+%\usepackage{handoutWithNotes}
+%\pgfpagesuselayout{1 on 1 with notes}[a4paper,border shrink=5mm]
+% }}}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{minted}
+\usetheme[numbering=none]{metropolis}
+
+% }}}
+% {{{ Commands
+\makeatletter
+\def\ft@overlay{}
+
+\addtobeamertemplate{footline}{}
+{
+    \lineskiplimit0pt
+    \begin{tikzpicture}[remember picture,overlay]
+        \ft@overlay
+    \end{tikzpicture}
+    \gdef\ft@overlay{}
+}
+
+\newcommand<>{\addtooverlay}[1]{
+    \only#2{
+      \expandafter\gdef\expandafter\ft@overlay\expandafter{\ft@overlay
+          \draw[fill=black,opacity=0.70]
+              (current page.north east) rectangle (current page.south west);
+          \node[text=white] at (current page.center) {
+              #1
+          };
+      }
+    }
+    \pause{}
+}
+
+\newcommand<>{\imgoverlay}[1]{
+    \addtooverlay<. (1)>{
+        \includegraphics[width=0.9\textwidth,height=0.9\textheight,keepaspectratio]{#1}
+    }
+}
+% }}}
+
+\title{Apprendre un nouveau langage}
+\subtitle{Mes débuts avec Rust}
+\author{Sanpi}
+\date{13 juin 2017}
+
+\begin{document}
+% {{{ Titre
+\begin{frame}
+    \titlepage{}
+\end{frame}
+\note {
+    J’ai commencé à m’intéressé à rust il y a un an, lorsqu’entre deux
+    discussions sur Coq, une personne en qui j’ai une grande confiance sur les
+    sujets technique m’a dit : « j’utilise deux langages : haskell, et quand je
+    ne peux pas faire de fonctionnel, rust ».
+
+    J’avais déjà va passé ce « nouveau » langage entre deux billets sur go et je
+    les avais classé dans la même catégorie : des remplaçant du C sans grand
+    intérêts.
+
+    Suite à cette discussion, je me suis motivé à regarder rust de plus prêt, ce
+    qui fut une brillante idée.
+}
+% }}}
+
+% {{{
+\begin{frame}
+    \begin{figure}
+        \centering
+
+        \includegraphics[width=70px]{images/lang/php}
+        \pause
+        \hspace{1in}
+        \includegraphics[width=70px]{images/lang/bash}
+        \pause
+        \hspace{1in}
+        \includegraphics[width=70px]{images/lang/javascript}
+        \pause
+        \hspace{1in}
+        \includegraphics[width=70px]{images/lang/rust}
+    \end{figure}
+\end{frame}
+% }}}
+
+% {{{ Suivre un tutoriel
+\section{Suivre un tutoriel}
+\begin{frame}
+    \frametitle{Suivre un tutoriel}
+\end{frame}
+% }}}
+
+% {{{ Manque d’idée
+\section{Manque d’idée}
+\begin{frame}
+    \frametitle{Manque d’idée}
+
+    \imgoverlay{images/24days}
+    \imgoverlay{images/24days-hl}
+    \imgoverlay{images/euler}
+    \imgoverlay{images/fibonacci}
+
+    \inputminted[
+        baselinestretch=1,
+        fontsize=\tiny
+    ]{rust}{sources/fibonacci.rs}
+\end{frame}
+
+\note {
+    Mon premier problème à été de trouver quoi faire. À la fois quelque chose de
+    simple et d’intéllectuellement satisfaisant, sinon j’allais rapidement
+    passer à autre chose.
+
+    C’est en cherchant de la doc sur rust que je suis tombé sur 24 days of rust,
+    que je vous conseille de lire, qui (à l’époque) présentait 24 cas d’usage de
+    rust dans la vraie vie.
+
+    Et dés le débuts, l’auteur précise que lorsqu’il débute avec un langage, il
+    aime bien résoudre quelque problème du projet euleur.
+
+    Alors le projet euler ce sont des problèmes de math, que vous pouver
+    résoudre comme bon vous semble, sauf peut être à la main.
+
+    Par exemple le second problème : « calculer la somme des nombres pair de la
+    suite de fibonacci jusqu’à 4 millions ».
+
+    Comme je débutais avec rust, j’ai cherché « rust + fibonacci » et je suis
+    tombé sur le code d’un itérateur que voici.
+
+    Et c’est en voyant le résultat que j’ai été ému par son élégance.
+}
+
+% {{{ Récriture de projets
+\section{Récriture de projets}
+\begin{frame}
+    \frametitle{Récriture de projets}
+
+    \imgoverlay{images/teleinfo}
+\end{frame}
+
+\note {
+    Ensuite, j’ai cherché des programmes simples à récrire. Ces dernières années
+    j’avais tendance à utiliser PHP pour tout et n’importe quoi. Par exemple
+    lire les données de consommation électrique via le port série sur un
+    raspberry pi.
+
+    Ensuite, pour rester dans le cadre de la domotique, j’ai récri un programme
+    écrit en C qui récupère les informations d’une station météo.
+}
+% }}}
+
+% {{{ Premier crate
+\section{Premier crate}
+\begin{frame}
+    \frametitle{Premier crate}
+
+    \imgoverlay{images/redpitaya}
+    \imgoverlay{images/yellow-pitaya}
+\end{frame}
+
+\note {
+    Pour finir avec mes débuts avec rust, j’ai créé mon premier crate qui est un
+    binding pour une bibliothèque C pour piloter un redpitaya qui est un
+    oscilloscope/générateur de signal sans écran.
+
+    À l’époque, je l’ai écrit à la main. Ne faite pas ça, il existe bindgen qui
+    le fait automatiquement pour vous. Ensuite il vous reste toutefois à écrire
+    une surcouche sûr et élégante.
+
+    À l’époque j’avais écris ça pour apprendre, sans forcement d’idée de
+    programme à faire avec. Puis, il y a maintenant quelque semaine le suis
+    parti pour récrire une bonne partie des logiciels en rust.
+
+    J’ai commencé avec l’interface, car l’application web demande une
+    utilisation massive de la sourie et comme le serveur SCPi (qui permet de
+    piloter le redpitaya via le réseau) est buggué, j’ai commencé à le récrire
+    également en rust.
+}
+% }}}
+
+% {{{ Quelques conseils
+\section{Quelques conseils}
+\begin{frame}
+    \frametitle{Quelques conseils}
+
+    \imgoverlay{images/rust-fr}
+    \imgoverlay{images/awesome}
+\end{frame}
+
+\note {
+    * Le compilateur est votre ami
+    * Comprennez le principe de propriété
+    * Un rust awesome avec une énorme liste de chose liée à rust
+    * IRC #rust-fr
+    * Les meetup rust
+}
+%}}}
+
+% {{{ Références
+\section{Références}
+\begin{frame}
+    \frametitle{Références}
+
+    \begin{itemize}
+        \item \tiny \href{https://github.com/sanpii/slides/releases/download/meetup-rust-2017-05/rust-beginnings.pdf}
+            {github.com/\textbf{\alert{sanpii/slides}}/releases/download/meetup-rust-2017-05/rust-beginnings.pdf}
+        \item \tiny \url{https://zsiciarz.github.io/24daysofrust/}
+        \item \tiny \url{https://projecteuler.net}
+        \item \tiny \url{https://hackaday.io/project/12708-uncontrolled-mechanical-ventilation}
+        \item \tiny \url{https://crates.io/crates/redpitaya}
+        \item \tiny \url{https://servo.github.io/rust-bindgen/}
+        \item \tiny \url{https://hackaday.io/project/21383-yellow-pitaya}
+        \item \tiny \url{https://blog.guillaume-gomez.fr/Rust/}
+        \item \tiny \url{https://github.com/kud1ing/awesome-rust}
+    \end{itemize}
+\end{frame}
+% }}}
+\end{document}
